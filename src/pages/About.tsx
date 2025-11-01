@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/context/CartContext';
 
 const About = () => {
+  const { totalItems } = useCart();
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-50">
@@ -19,7 +21,11 @@ const About = () => {
           <Link to="/cart">
             <Button variant="outline" size="icon" className="relative border-gradient">
               <Icon name="ShoppingCart" size={20} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">0</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </Link>
         </nav>

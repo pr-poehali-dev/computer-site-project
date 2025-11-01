@@ -4,6 +4,8 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 const products = [
   { id: 1, name: 'CYBERPUNK ELITE', price: 299990, category: 'gaming', image: '🎮', specs: 'RTX 4090 | i9-14900K | 64GB DDR5' },
@@ -17,6 +19,8 @@ const products = [
 const Catalog = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
+  const { addToCart, totalItems } = useCart();
+  const { toast } = useToast();
 
   const filteredProducts = products.filter(p => 
     (category === 'all' || p.category === category) &&
@@ -39,7 +43,11 @@ const Catalog = () => {
           <Link to="/cart">
             <Button variant="outline" size="icon" className="relative border-gradient">
               <Icon name="ShoppingCart" size={20} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">0</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </Link>
         </nav>
@@ -79,7 +87,16 @@ const Catalog = () => {
                 <p className="text-foreground/60 mb-4 text-sm">{product.specs}</p>
                 <div className="flex items-center justify-between">
                   <span className="text-3xl font-bold text-gradient">{product.price.toLocaleString()} ₽</span>
-                  <Button className="rgb-glow">
+                  <Button 
+                    className="rgb-glow"
+                    onClick={() => {
+                      addToCart({ ...product, image: product.image });
+                      toast({
+                        title: "Добавлено в корзину",
+                        description: product.name,
+                      });
+                    }}
+                  >
                     <Icon name="ShoppingCart" size={18} className="mr-2" />
                     В корзину
                   </Button>

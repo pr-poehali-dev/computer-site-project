@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +7,8 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import { useCart } from '@/context/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface PCProduct {
   id: number;
@@ -94,6 +97,8 @@ const Index = () => {
   const [selectedGPUs, setSelectedGPUs] = useState<string[]>([]);
   const [selectedRAM, setSelectedRAM] = useState<number[]>([]);
   const [activeSection, setActiveSection] = useState('Главная');
+  const { addToCart, totalItems } = useCart();
+  const { toast } = useToast();
 
   const cpuOptions = ['Intel Core i9', 'Intel Core i7', 'Intel Core i5', 'AMD Ryzen 9', 'AMD Ryzen 7', 'AMD Ryzen 5', 'AMD Threadripper'];
   const gpuOptions = ['RTX 4090', 'RTX 4080', 'RTX 4070 Ti', 'RTX 4060 Ti', 'RTX 4060'];
@@ -139,10 +144,17 @@ const Index = () => {
                 </button>
               ))}
             </nav>
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-              <Icon name="ShoppingCart" size={18} className="mr-2" />
-              Корзина
-            </Button>
+            <Link to="/cart">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative">
+                <Icon name="ShoppingCart" size={18} className="mr-2" />
+                Корзина
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                    {totalItems}
+                  </span>
+                )}
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -354,7 +366,21 @@ const Index = () => {
                             <span className="text-muted-foreground">{product.storage}</span>
                           </div>
                         </div>
-                        <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+                        <Button 
+                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                          onClick={() => {
+                            addToCart({
+                              id: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.image
+                            });
+                            toast({
+                              title: "Добавлено в корзину",
+                              description: product.name,
+                            });
+                          }}
+                        >
                           <Icon name="ShoppingCart" size={18} className="mr-2" />
                           В корзину
                         </Button>

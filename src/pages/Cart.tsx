@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import { useCart } from '@/context/CartContext';
 
 const Cart = () => {
-  const cartItems = [
-    { id: 1, name: 'CYBERPUNK ELITE', price: 299990, quantity: 1, image: '🎮' },
-    { id: 2, name: 'RGB WARRIOR', price: 189990, quantity: 1, image: '⚡' }
-  ];
-
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { items, totalPrice, totalItems, updateQuantity, removeFromCart } = useCart();
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,7 +22,11 @@ const Cart = () => {
           <Link to="/cart">
             <Button variant="outline" size="icon" className="relative border-gradient">
               <Icon name="ShoppingCart" size={20} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">{cartItems.length}</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </Link>
         </nav>
@@ -35,7 +35,7 @@ const Cart = () => {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-5xl font-black mb-8 text-gradient">Корзина</h1>
 
-        {cartItems.length === 0 ? (
+        {items.length === 0 ? (
           <div className="text-center py-16">
             <Icon name="ShoppingCart" size={80} className="mx-auto text-muted-foreground mb-4" />
             <p className="text-xl text-foreground/60 mb-8">Ваша корзина пуста</p>
@@ -46,7 +46,7 @@ const Cart = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div key={item.id} className="border border-border bg-card rounded-lg p-6 flex items-center gap-6">
                   <div className="w-24 h-24 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-lg flex items-center justify-center text-4xl">
                     {item.image}
@@ -56,15 +56,27 @@ const Cart = () => {
                     <p className="text-2xl font-bold text-gradient">{item.price.toLocaleString()} ₽</p>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Button variant="outline" size="icon">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    >
                       <Icon name="Minus" size={16} />
                     </Button>
                     <span className="text-xl font-bold w-8 text-center">{item.quantity}</span>
-                    <Button variant="outline" size="icon">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    >
                       <Icon name="Plus" size={16} />
                     </Button>
                   </div>
-                  <Button variant="destructive" size="icon">
+                  <Button 
+                    variant="destructive" 
+                    size="icon"
+                    onClick={() => removeFromCart(item.id)}
+                  >
                     <Icon name="Trash2" size={18} />
                   </Button>
                 </div>
@@ -76,8 +88,8 @@ const Cart = () => {
                 <h2 className="text-2xl font-bold mb-6">Итого</h2>
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-lg">
-                    <span className="text-foreground/60">Товары ({cartItems.length})</span>
-                    <span className="font-bold">{total.toLocaleString()} ₽</span>
+                    <span className="text-foreground/60">Товары ({totalItems})</span>
+                    <span className="font-bold">{totalPrice.toLocaleString()} ₽</span>
                   </div>
                   <div className="flex justify-between text-lg">
                     <span className="text-foreground/60">Доставка</span>
@@ -86,7 +98,7 @@ const Cart = () => {
                   <div className="border-t border-border pt-4">
                     <div className="flex justify-between text-2xl">
                       <span className="font-bold">Всего</span>
-                      <span className="font-bold text-gradient">{total.toLocaleString()} ₽</span>
+                      <span className="font-bold text-gradient">{totalPrice.toLocaleString()} ₽</span>
                     </div>
                   </div>
                 </div>
