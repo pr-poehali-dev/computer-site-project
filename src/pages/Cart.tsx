@@ -5,18 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
-
-const promoCodes: Record<string, { discount: number; description: string }> = {
-  'DEV100': { discount: 100, description: 'Скидка для разработчиков' },
-  'CYBER50': { discount: 50, description: 'Киберскидка 50%' },
-  'WELCOME20': { discount: 20, description: 'Приветственная скидка 20%' },
-};
+import { promoCodes } from '@/lib/promoCodes';
 
 const Cart = () => {
-  const { items, totalPrice, totalItems, updateQuantity, removeFromCart } = useCart();
+  const { items, totalPrice, totalItems, updateQuantity, removeFromCart, appliedPromo, setAppliedPromo, finalPrice } = useCart();
   const { toast } = useToast();
   const [promoCode, setPromoCode] = useState('');
-  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discount: number } | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
@@ -172,10 +166,7 @@ const Cart = () => {
                     <div className="flex justify-between text-2xl">
                       <span className="font-bold">Всего</span>
                       <span className="font-bold text-gradient">
-                        {appliedPromo 
-                          ? Math.round(totalPrice * (1 - appliedPromo.discount / 100)).toLocaleString()
-                          : totalPrice.toLocaleString()
-                        } ₽
+                        {finalPrice.toLocaleString()} ₽
                       </span>
                     </div>
                     {appliedPromo && appliedPromo.discount === 100 && (
