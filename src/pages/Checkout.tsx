@@ -1,17 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useCart } from '@/context/CartContext';
 
 const Checkout = () => {
-  const cartItems = [
-    { id: 1, name: 'CYBERPUNK ELITE', price: 299990, quantity: 1 },
-    { id: 2, name: 'RGB WARRIOR', price: 189990, quantity: 1 }
-  ];
-
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { items, totalPrice, totalItems } = useCart();
 
   return (
     <div className="min-h-screen bg-background">
@@ -21,7 +18,11 @@ const Checkout = () => {
           <Link to="/cart">
             <Button variant="outline" size="icon" className="relative border-gradient">
               <Icon name="ShoppingCart" size={20} />
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">{cartItems.length}</span>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                  {totalItems}
+                </span>
+              )}
             </Button>
           </Link>
         </nav>
@@ -110,7 +111,7 @@ const Checkout = () => {
             <div className="border border-border bg-card rounded-lg p-6 sticky top-24">
               <h2 className="text-2xl font-bold mb-6">Ваш заказ</h2>
               <div className="space-y-4 mb-6">
-                {cartItems.map((item) => (
+                {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
                     <span className="text-foreground/80">{item.name} × {item.quantity}</span>
                     <span className="font-bold">{item.price.toLocaleString()} ₽</span>
@@ -123,7 +124,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between text-2xl">
                     <span className="font-bold">Итого</span>
-                    <span className="font-bold text-gradient">{total.toLocaleString()} ₽</span>
+                    <span className="font-bold text-gradient">{totalPrice.toLocaleString()} ₽</span>
                   </div>
                 </div>
               </div>

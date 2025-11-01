@@ -1,10 +1,22 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/hooks/use-toast';
+
+const promoCodes: Record<string, { discount: number; description: string }> = {
+  'DEV100': { discount: 100, description: 'Скидка для разработчиков' },
+  'CYBER50': { discount: 50, description: 'Киберскидка 50%' },
+  'WELCOME20': { discount: 20, description: 'Приветственная скидка 20%' },
+};
 
 const Cart = () => {
   const { items, totalPrice, totalItems, updateQuantity, removeFromCart } = useCart();
+  const { toast } = useToast();
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discount: number } | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
@@ -86,6 +98,61 @@ const Cart = () => {
             <div className="lg:col-span-1">
               <div className="border border-border bg-card rounded-lg p-6 sticky top-24">
                 <h2 className="text-2xl font-bold mb-6">Итого</h2>
+                
+                <div className="mb-6">
+                  <label className="text-sm font-medium mb-2 block">Промокод</label>
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Введите промокод"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      disabled={!!appliedPromo}
+                    />
+                    {!appliedPromo ? (
+                      <Button 
+                        onClick={() => {
+                          const promo = promoCodes[promoCode];
+                          if (promo) {
+                            setAppliedPromo({ code: promoCode, discount: promo.discount });
+                            toast({
+                              title: "Промокод применен!",
+                              description: `${promo.description} - ${promo.discount}%`,
+                            });
+                          } else {
+                            toast({
+                              title: "Ошибка",
+                              description: "Неверный промокод",
+                              variant: "destructive"
+                            });
+                          }
+                        }}
+                        disabled={!promoCode}
+                      >
+                        Применить
+                      </Button>
+                    ) : (
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          setAppliedPromo(null);
+                          setPromoCode('');
+                          toast({
+                            title: "Промокод удален",
+                          });
+                        }}
+                      >
+                        <Icon name="X" size={16} />
+                      </Button>
+                    )}
+                  </div>
+                  {appliedPromo && (
+                    <div className="mt-2 flex items-center gap-2 text-sm text-green-500">
+                      <Icon name="CheckCircle" size={16} />
+                      <span>{promoCodes[appliedPromo.code].description}</span>
+                    </div>
+                  )}
+                </div>
+
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-lg">
                     <span className="text-foreground/60">Товары ({totalItems})</span>
@@ -95,11 +162,27 @@ const Cart = () => {
                     <span className="text-foreground/60">Доставка</span>
                     <span className="font-bold text-green-500">Бесплатно</span>
                   </div>
+                  {appliedPromo && appliedPromo.discount > 0 && (
+                    <div className="flex justify-between text-lg">
+                      <span className="text-foreground/60">Скидка ({appliedPromo.discount}%)</span>
+                      <span className="font-bold text-green-500">-{Math.round(totalPrice * appliedPromo.discount / 100).toLocaleString()} ₽</span>
+                    </div>
+                  )}
                   <div className="border-t border-border pt-4">
                     <div className="flex justify-between text-2xl">
                       <span className="font-bold">Всего</span>
-                      <span className="font-bold text-gradient">{totalPrice.toLocaleString()} ₽</span>
+                      <span className="font-bold text-gradient">
+                        {appliedPromo 
+                          ? Math.round(totalPrice * (1 - appliedPromo.discount / 100)).toLocaleString()
+                          : totalPrice.toLocaleString()
+                        } ₽
+                      </span>
                     </div>
+                    {appliedPromo && appliedPromo.discount === 100 && (
+                      <div className="mt-2 text-center text-sm text-green-500 font-bold">
+                        🎉 Поздравляем! Заказ бесплатный!
+                      </div>
+                    )}
                   </div>
                 </div>
                 <Link to="/checkout">
