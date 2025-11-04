@@ -104,34 +104,49 @@ const Checkout = () => {
 
     await new Promise(resolve => setTimeout(resolve, 1500));
 
+    const orderNumber = `CPC-${Date.now()}`;
+    
     const orderData = {
-      ...formData,
+      orderNumber,
+      total: finalPrice,
       items: items.map(item => ({
-        id: item.id,
         name: item.name,
-        price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity,
+        price: item.price
       })),
-      totalPrice,
-      finalPrice,
-      appliedPromo: appliedPromo ? { code: appliedPromo.code, discount: appliedPromo.discount } : null,
-      orderDate: new Date().toISOString(),
-      orderNumber: `CPC-${Date.now()}`,
+      customer: {
+        firstName: formData.name,
+        lastName: formData.surname,
+        email: formData.email,
+        phone: formData.phone
+      },
+      delivery: {
+        city: formData.city,
+        address: formData.address,
+        postalCode: formData.zip,
+        apartment: '',
+        entrance: formData.entrance,
+        floor: formData.floor
+      },
+      paymentMethod: formData.paymentMethod,
+      appliedPromo
     };
+
+    sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
 
     console.log('Заказ оформлен:', orderData);
 
     toast({
       title: "Заказ оформлен! 🎉",
-      description: `Номер заказа: ${orderData.orderNumber}`,
+      description: `Номер заказа: ${orderNumber}`,
     });
 
     clearCart();
     setIsSubmitting(false);
     
     setTimeout(() => {
-      navigate('/');
-    }, 2000);
+      navigate('/order-success');
+    }, 1500);
   };
 
   if (items.length === 0) {
