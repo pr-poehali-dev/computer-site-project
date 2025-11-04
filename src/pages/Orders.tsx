@@ -192,10 +192,12 @@ export default function Orders() {
                 </div>
 
                 <div className="flex flex-wrap gap-3 pt-4 border-t border-border/50">
-                  <Button variant="outline" size="sm">
-                    <Icon name="Eye" size={16} className="mr-2" />
-                    Подробнее
-                  </Button>
+                  <Link to={`/track-order?order=${order.orderNumber}`}>
+                    <Button variant="default" size="sm">
+                      <Icon name="MapPin" size={16} className="mr-2" />
+                      Отследить заказ
+                    </Button>
+                  </Link>
                   <Button variant="outline" size="sm">
                     <Icon name="Download" size={16} className="mr-2" />
                     Скачать чек

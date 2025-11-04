@@ -118,24 +118,48 @@ export default function OrderSuccess() {
             </p>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
             <p className="text-sm text-blue-900">
               <Icon name="Info" size={16} className="inline mr-2" />
               Мы отправили подтверждение заказа на email <strong>{customer.email}</strong>
             </p>
           </div>
 
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <Icon name="Calendar" size={20} className="text-green-600 mt-1" />
+                <div>
+                  <p className="font-semibold text-green-900">Ожидаемая доставка</p>
+                  <p className="text-sm text-green-700">
+                    {new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000).toLocaleDateString('ru-RU', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric'
+                    })}
+                  </p>
+                </div>
+              </div>
+              <Link to={`/track-order?order=${orderNumber}`}>
+                <Button variant="outline" size="sm" className="border-green-300 hover:bg-green-100">
+                  <Icon name="MapPin" size={16} className="mr-2" />
+                  Отследить
+                </Button>
+              </Link>
+            </div>
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/orders">
-                <Icon name="Package" size={18} className="mr-2" />
-                Мои заказы
+              <Link to={`/track-order?order=${orderNumber}`}>
+                <Icon name="MapPin" size={18} className="mr-2" />
+                Когда приедет заказ?
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link to="/">
-                <Icon name="Home" size={18} className="mr-2" />
-                На главную
+              <Link to="/orders">
+                <Icon name="Package" size={18} className="mr-2" />
+                Мои заказы
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
