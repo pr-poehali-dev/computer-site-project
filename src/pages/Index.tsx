@@ -144,17 +144,24 @@ const Index = () => {
                 </button>
               ))}
             </nav>
-            <Link to="/cart">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative">
-                <Icon name="ShoppingCart" size={18} className="mr-2" />
-                Корзина
-                {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
-                    {totalItems}
-                  </span>
-                )}
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link to="/orders">
+                <Button variant="outline" size="icon">
+                  <Icon name="Package" size={18} />
+                </Button>
+              </Link>
+              <Link to="/cart">
+                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative">
+                  <Icon name="ShoppingCart" size={18} className="mr-2" />
+                  Корзина
+                  {totalItems > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-secondary rounded-full flex items-center justify-center text-xs">
+                      {totalItems}
+                    </span>
+                  )}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>

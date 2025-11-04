@@ -129,10 +129,17 @@ const Checkout = () => {
         floor: formData.floor
       },
       paymentMethod: formData.paymentMethod,
-      appliedPromo
+      appliedPromo,
+      orderDate: new Date().toISOString(),
+      status: 'processing'
     };
 
     sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+
+    const existingOrders = localStorage.getItem('orderHistory');
+    const orderHistory = existingOrders ? JSON.parse(existingOrders) : [];
+    orderHistory.unshift(orderData);
+    localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
 
     console.log('Заказ оформлен:', orderData);
 

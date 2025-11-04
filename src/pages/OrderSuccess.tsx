@@ -127,6 +127,12 @@ export default function OrderSuccess() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
+              <Link to="/orders">
+                <Icon name="Package" size={18} className="mr-2" />
+                Мои заказы
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
               <Link to="/">
                 <Icon name="Home" size={18} className="mr-2" />
                 На главную
