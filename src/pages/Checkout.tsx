@@ -143,9 +143,22 @@ const Checkout = () => {
 
     console.log('Заказ оформлен:', orderData);
 
+    try {
+      await fetch('https://functions.poehali.dev/076bb0f4-1196-4218-a71b-038068639d52', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'order_confirmation',
+          order: orderData
+        })
+      });
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    }
+
     toast({
       title: "Заказ оформлен! 🎉",
-      description: `Номер заказа: ${orderNumber}`,
+      description: `Номер заказа: ${orderNumber}. Подтверждение отправлено на email`,
     });
 
     clearCart();

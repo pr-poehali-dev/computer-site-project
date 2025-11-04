@@ -1,0 +1,63 @@
+{
+  "tests": [
+    {
+      "name": "Send order confirmation email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "type": "order_confirmation",
+        "order": {
+          "orderNumber": "CPC-1234567890",
+          "total": 150000,
+          "items": [
+            {
+              "name": "ULTRA GAMING PRO",
+              "quantity": 1,
+              "price": 150000
+            }
+          ],
+          "customer": {
+            "firstName": "Иван",
+            "lastName": "Иванов",
+            "email": "ivan@example.com",
+            "phone": "+7 999 123-45-67"
+          },
+          "delivery": {
+            "city": "Москва",
+            "address": "ул. Тверская, д. 10",
+            "postalCode": "125009"
+          },
+          "paymentMethod": "card"
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "order_number": "CPC-1234567890"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Send status update email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "type": "status_update",
+        "order": {
+          "orderNumber": "CPC-1234567890",
+          "status": "shipped",
+          "customer": {
+            "firstName": "Иван",
+            "lastName": "Иванов",
+            "email": "ivan@example.com"
+          }
+        }
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
