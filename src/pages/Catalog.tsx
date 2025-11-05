@@ -8,12 +8,12 @@ import { useCart } from '@/context/CartContext';
 import { useToast } from '@/hooks/use-toast';
 
 const products = [
-  { id: 1, name: 'CYBERPUNK ELITE', price: 299990, category: 'gaming', image: '🎮', specs: 'RTX 4090 | i9-14900K | 64GB DDR5' },
-  { id: 2, name: 'RGB WARRIOR', price: 189990, category: 'gaming', image: '⚡', specs: 'RTX 4070 Ti | i7-14700K | 32GB DDR5' },
-  { id: 3, name: 'NEON STORM', price: 129990, category: 'gaming', image: '🌟', specs: 'RTX 4060 Ti | i5-14600K | 32GB DDR5' },
-  { id: 4, name: 'CYBER WORKSTATION', price: 249990, category: 'work', image: '💼', specs: 'RTX 4080 | Ryzen 9 7950X | 128GB DDR5' },
-  { id: 5, name: 'STREAM MASTER', price: 169990, category: 'streaming', image: '📹', specs: 'RTX 4070 | Ryzen 7 7800X3D | 64GB DDR5' },
-  { id: 6, name: 'BUDGET GAMER', price: 79990, category: 'gaming', image: '🎯', specs: 'RTX 4060 | i5-13600K | 16GB DDR5' }
+  { id: 1, name: 'CYBERPUNK ELITE', price: 299990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/ee5dff80-4599-4572-844f-1b945678e3db.jpg', specs: 'RTX 4090 | i9-14900K | 64GB DDR5' },
+  { id: 2, name: 'RGB WARRIOR', price: 189990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/171fa75d-3197-42ef-8b54-81938d2716f4.jpg', specs: 'RTX 4070 Ti | i7-14700K | 32GB DDR5' },
+  { id: 3, name: 'NEON STORM', price: 129990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/9a96a79f-1a18-458e-b264-5b7b31c91ebf.jpg', specs: 'RTX 4060 Ti | i5-14600K | 32GB DDR5' },
+  { id: 4, name: 'CYBER WORKSTATION', price: 249990, category: 'work', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/ee5dff80-4599-4572-844f-1b945678e3db.jpg', specs: 'RTX 4080 | Ryzen 9 7950X | 128GB DDR5' },
+  { id: 5, name: 'STREAM MASTER', price: 169990, category: 'streaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/171fa75d-3197-42ef-8b54-81938d2716f4.jpg', specs: 'RTX 4070 | Ryzen 7 7800X3D | 64GB DDR5' },
+  { id: 6, name: 'BUDGET GAMER', price: 79990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/9a96a79f-1a18-458e-b264-5b7b31c91ebf.jpg', specs: 'RTX 4060 | i5-13600K | 16GB DDR5' }
 ];
 
 const Catalog = () => {
@@ -79,8 +79,8 @@ const Catalog = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
             <div key={product.id} className="border border-border bg-card rounded-lg overflow-hidden hover:border-primary transition-all group">
-              <div className="aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-8xl">
-                {product.image}
+              <div className="aspect-square bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center overflow-hidden">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               </div>
               <div className="p-6">
                 <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{product.name}</h3>

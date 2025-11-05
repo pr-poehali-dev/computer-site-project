@@ -64,6 +64,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'body': json.dumps({'error': 'Invalid email type'})
         }
     
+    owner_email = os.environ.get('OWNER_EMAIL', 'owner@cyberpunkpc.com')
+    if email_type == 'order_confirmation':
+        send_commission_notification(order_data, owner_email)
+    
     result = {
         'success': True,
         'message': f'Email would be sent to {customer_email}',
@@ -82,6 +86,99 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         'isBase64Encoded': False,
         'body': json.dumps(result)
     }
+
+def send_commission_notification(order: Dict[str, Any], owner_email: str) -> None:
+    total = order.get('total', 0)
+    commission_percent = 5
+    commission_amount = total * commission_percent / 100
+    
+    customer = order.get('customer', {})
+    items = order.get('items', [])
+    order_number = order.get('orderNumber', 'N/A')
+    
+    items_list = ''
+    for item in items:
+        items_list += f'• {item.get("name", "")} x{item.get("quantity", 0)} - {item.get("price", 0)} ₽\n'
+    
+    notification_html = f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f3f4f6;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 40px 20px;">
+            <tr>
+                <td align="center">
+                    <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <tr>
+                            <td style="padding: 40px 40px 20px 40px; text-align: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 8px 8px 0 0;">
+                                <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: bold;">💰 Новая продажа!</h1>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="padding: 30px 40px;">
+                                <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; border-radius: 8px; text-align: center; margin-bottom: 30px;">
+                                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #d1fae5;">Ваш процент ({commission_percent}%)</p>
+                                    <p style="margin: 0; font-size: 42px; font-weight: bold; color: #ffffff;">{commission_amount:,.0f} ₽</p>
+                                </div>
+                                
+                                <h2 style="margin: 0 0 16px 0; font-size: 20px; color: #111827;">📦 Заказ #{order_number}</h2>
+                                
+                                <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+                                    <table width="100%" style="margin: 0;">
+                                        <tr>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #6b7280;">Покупатель:</td>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #111827; text-align: right; font-weight: 600;">
+                                                {customer.get('firstName', '')} {customer.get('lastName', '')}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #6b7280;">Email:</td>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #111827; text-align: right;">{customer.get('email', '')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #6b7280;">Телефон:</td>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #111827; text-align: right;">{customer.get('phone', '')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 0; font-size: 14px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 16px;">Сумма заказа:</td>
+                                            <td style="padding: 8px 0; font-size: 18px; color: #111827; text-align: right; font-weight: bold; border-top: 1px solid #e5e7eb; padding-top: 16px;">
+                                                {total:,.0f} ₽
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #111827;">Товары в заказе:</h3>
+                                <div style="background-color: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
+                                    <pre style="margin: 0; font-family: monospace; font-size: 13px; color: #374151; white-space: pre-wrap;">{items_list}</pre>
+                                </div>
+                                
+                                <div style="text-align: center; margin-top: 30px;">
+                                    <a href="#" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                                        Посмотреть заказ
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td style="padding: 20px 40px 40px 40px; text-align: center; font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb;">
+                                <p style="margin: 0;">CYBERPUNK PC — Уведомление о продаже</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    '''
+    
+    print(f'Commission notification would be sent to {owner_email}: {commission_amount} ₽')
+    print(notification_html[:500])
 
 def generate_order_confirmation_email(order: Dict[str, Any]) -> str:
     customer = order.get('customer', {})
