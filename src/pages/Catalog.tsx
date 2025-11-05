@@ -13,7 +13,11 @@ const products = [
   { id: 3, name: 'NEON STORM', price: 129990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/9a96a79f-1a18-458e-b264-5b7b31c91ebf.jpg', specs: 'RTX 4060 Ti | i5-14600K | 32GB DDR5' },
   { id: 4, name: 'CYBER WORKSTATION', price: 249990, category: 'work', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/ee5dff80-4599-4572-844f-1b945678e3db.jpg', specs: 'RTX 4080 | Ryzen 9 7950X | 128GB DDR5' },
   { id: 5, name: 'STREAM MASTER', price: 169990, category: 'streaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/171fa75d-3197-42ef-8b54-81938d2716f4.jpg', specs: 'RTX 4070 | Ryzen 7 7800X3D | 64GB DDR5' },
-  { id: 6, name: 'BUDGET GAMER', price: 79990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/9a96a79f-1a18-458e-b264-5b7b31c91ebf.jpg', specs: 'RTX 4060 | i5-13600K | 16GB DDR5' }
+  { id: 6, name: 'BUDGET GAMER', price: 79990, category: 'gaming', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/9a96a79f-1a18-458e-b264-5b7b31c91ebf.jpg', specs: 'RTX 4060 | i5-13600K | 16GB DDR5' },
+  { id: 7, name: 'ULTRAWIDE CYBER', price: 89990, category: 'monitors', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/90e401f7-2eb4-4ee3-b882-2d9d0eb536c7.jpg', specs: '34" | 3440x1440 | 165Hz | 1ms' },
+  { id: 8, name: 'DUAL SCREEN PRO', price: 54990, category: 'monitors', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/073cff24-81f8-426f-ac0b-fc4fdf964039.jpg', specs: '2x 27" | 2560x1440 | 144Hz | IPS' },
+  { id: 9, name: 'RGB MECH PRO', price: 12990, category: 'keyboards', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/fa974698-260a-45b9-a463-cae651f688f1.jpg', specs: 'Механика | Cherry MX | RGB | 60%' },
+  { id: 10, name: 'GAMING FULL SIZE', price: 8990, category: 'keyboards', image: 'https://cdn.poehali.dev/projects/0e9e4d24-ce18-46db-b39f-bdbab26251c0/files/baebddc0-09c6-4334-9b75-aaaef9801501.jpg', specs: 'Полный размер | RGB | Anti-ghosting' }
 ];
 
 const Catalog = () => {
@@ -58,7 +62,7 @@ const Catalog = () => {
 
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <Input 
-            placeholder="Поиск компьютеров..." 
+            placeholder="Поиск товаров..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1"
@@ -68,10 +72,12 @@ const Catalog = () => {
               <SelectValue placeholder="Категория" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Все категории</SelectItem>
-              <SelectItem value="gaming">Игровые</SelectItem>
+              <SelectItem value="all">Все товары</SelectItem>
+              <SelectItem value="gaming">Игровые ПК</SelectItem>
               <SelectItem value="work">Рабочие станции</SelectItem>
               <SelectItem value="streaming">Для стриминга</SelectItem>
+              <SelectItem value="monitors">Мониторы</SelectItem>
+              <SelectItem value="keyboards">Клавиатуры</SelectItem>
             </SelectContent>
           </Select>
         </div>
