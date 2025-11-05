@@ -229,20 +229,53 @@ export default function TrackOrder() {
                   </span>
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                  <div className="flex items-start gap-3">
-                    <Icon name="Calendar" size={20} className="text-blue-600 mt-1" />
-                    <div>
-                      <p className="font-semibold text-blue-900">Ожидаемая доставка</p>
-                      <p className="text-blue-700">{getEstimatedDelivery(order.orderDate)}</p>
-                      {order.status === 'completed' && (
-                        <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
-                          <Icon name="CheckCircle2" size={14} />
-                          Заказ уже доставлен!
-                        </p>
-                      )}
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Icon name="Calendar" size={20} className="text-blue-600 mt-1" />
+                      <div>
+                        <p className="font-semibold text-blue-900">Ожидаемая доставка</p>
+                        <p className="text-blue-700">{getEstimatedDelivery(order.orderDate)}</p>
+                        {order.status === 'completed' && (
+                          <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                            <Icon name="CheckCircle2" size={14} />
+                            Заказ уже доставлен!
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
+
+                  {(order.status === 'shipped' || order.status === 'completed') && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start gap-3">
+                        <Icon name="MessageCircle" size={20} className="text-green-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="font-semibold text-green-900 mb-2">Связь с курьером</p>
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="flex-1 border-green-300 hover:bg-green-100"
+                              onClick={() => window.open('https://wa.me/79991234567?text=Здравствуйте! Мой заказ ' + order.orderNumber, '_blank')}
+                            >
+                              <Icon name="MessageCircle" size={16} className="mr-1" />
+                              WhatsApp
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              className="flex-1 border-green-300 hover:bg-green-100"
+                              onClick={() => window.open('https://t.me/cyberpunk_delivery?start=' + order.orderNumber, '_blank')}
+                            >
+                              <Icon name="Send" size={16} className="mr-1" />
+                              Telegram
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-4">

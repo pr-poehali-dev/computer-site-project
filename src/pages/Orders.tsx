@@ -198,6 +198,28 @@ export default function Orders() {
                       Отследить заказ
                     </Button>
                   </Link>
+                  {(order.status === 'shipped' || order.status === 'completed') && (
+                    <>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-green-300 hover:bg-green-50"
+                        onClick={() => window.open('https://wa.me/79991234567?text=Здравствуйте! Мой заказ ' + order.orderNumber, '_blank')}
+                      >
+                        <Icon name="MessageCircle" size={16} className="mr-2" />
+                        WhatsApp курьера
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-blue-300 hover:bg-blue-50"
+                        onClick={() => window.open('https://t.me/cyberpunk_delivery?start=' + order.orderNumber, '_blank')}
+                      >
+                        <Icon name="Send" size={16} className="mr-2" />
+                        Telegram курьера
+                      </Button>
+                    </>
+                  )}
                   <Button variant="outline" size="sm">
                     <Icon name="Download" size={16} className="mr-2" />
                     Скачать чек
